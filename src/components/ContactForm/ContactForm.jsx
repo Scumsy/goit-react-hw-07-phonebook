@@ -4,13 +4,14 @@ import { add } from 'components/Redux/contactsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { BtnAddContact } from './ContactForm.styled';
 import { FilterStyle } from 'components/Filter/Filter.styled';
+import { selectContacts } from 'components/Redux/selectors';
 
 export const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts);
+  const contacts = useSelector(selectContacts);
 
   const onAddContact = data => {
     data.id = nanoid();

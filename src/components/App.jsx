@@ -1,16 +1,11 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { ContactForm } from './ContactForm/ContactForm';
 import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
-import { setFilter } from './Redux/filterSlice';
+import { selectContacts } from './Redux/selectors';
 
 export const App = () => {
-  const dispatch = useDispatch();
-  const filter = useSelector(state => state.filter);
-
-  const onFormInput = evt => {
-    dispatch(setFilter(evt.target.value));
-  };
+  const contacts = useSelector(selectContacts);
 
   return (
     <div
@@ -28,9 +23,14 @@ export const App = () => {
       <ContactForm />
 
       <h2>Contacts</h2>
-      <Filter onChange={onFormInput} type="text" name="filter" value={filter} />
-
-      <ContactList />
+      {contacts.length >= 1 ? (
+        <div>
+          {<Filter />}
+          {<ContactList />}
+        </div>
+      ) : (
+        <h3>No contacts yet</h3>
+      )}
     </div>
   );
 };

@@ -5,11 +5,12 @@ import {
 } from './ContactList.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { remove } from '../Redux/contactsSlice';
+import { selectContacts, selectFilter } from 'components/Redux/selectors';
 
 export const ContactList = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts);
-  const filter = useSelector(state => state.filter);
+  const contacts = useSelector(selectContacts);
+  const filter = useSelector(selectFilter);
 
   const filterToLowerCase = filter.toLocaleLowerCase();
   const filteredContacts = contacts.filter(contact =>
