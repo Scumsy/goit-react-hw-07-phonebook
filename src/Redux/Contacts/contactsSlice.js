@@ -9,25 +9,25 @@ const contactsSlice = createSlice({
     isLoading: false,
     error: null,
   },
-  // reducers: {
-  //   add(state, action) {
-  //     state.push(action.payload);
-  //   },
-  //   remove(state, action) {
-  //     return state.filter(item => item.id !== action.payload);
-  //   },
-  // },
-  // reducers: {
-  //   // setFilter: (state, action) => {
-  //   //   state.contacts.filter.value = action.payload;
-  //   // },
-  //   add: (state, action) => {
-  //     state.contacts.items.push(action.payload);
-  //   },
-  //   remove: (state, action) => {
-  //     return state.contacts.items.filter(item => item.id !== action.payload);
-  //   },
-  // },
+  reducers: {
+    add(state, action) {
+      state.push(action.payload);
+    },
+    remove(state, action) {
+      return state.filter(item => item.id !== action.payload);
+    },
+  },
+  reducers: {
+    setFilter: (state, action) => {
+      state.contacts.filter.value = action.payload;
+    },
+    add: (state, action) => {
+      state.contacts.items.push(action.payload);
+    },
+    remove: (state, action) => {
+      return state.contacts.items.filter(item => item.id !== action.payload);
+    },
+  },
   extraReducers: builder => {
     builder.addCase(fetchContacts.pending, (state, _) => {
       state.contacts.isLoading = true;
