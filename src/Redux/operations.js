@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { add, remove } from './Contacts/contactsSlice';
+import { setContact, removeContact } from './Contacts/contactsSlice';
 
 axios.defaults.baseURL =
   'https://63c2b6acb0c286fbe5f2224d.mockapi.io/phonebook';
@@ -11,13 +11,11 @@ export const fetchContacts = createAsyncThunk(
     try {
       const response = await axios.get(`/contacts`);
 
-      if (!response.ok) {
+      if (response.statusText !== 'OK') {
         throw new Error('Error');
       }
 
-      const data = await response.json();
-
-      return data;
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -30,11 +28,11 @@ export const deleteContacts = createAsyncThunk(
     try {
       const response = await axios.delete(`/contacts/${id}`);
 
-      if (!response.ok) {
+      if (response.statusText !== 'OK') {
         throw new Error('Sorry we cant delete your contact');
       }
 
-      dispatch(remove(id));
+      return dispatch(removeContact(id));
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -50,51 +48,17 @@ export const addContacts = createAsyncThunk(
         phone: data.phone,
       };
 
-      const response = await axios.post(`/contacts/`);
+      const response = await axios.post(`/contacts/`, contact);
 
-      if (!response.ok) {
+      data.id = response.data.id;
+
+      if (response.status !== 201) {
         throw new Error('Sorry cant add your contact');
       }
 
-      dispatch(add(data));
+      return dispatch(setContact(data));
     } catch (error) {
       return rejectWithValue(error.message);
     }
   }
 );
-
-// export const fetchContacts = createAsyncThunk(
-//   'contacts/fetchContacts',
-//   async (_, thunkAPI) => {
-//     try {
-//       const response = await axios.get('/contacts');
-//       return response.data;
-//     } catch (e) {
-//       return thunkAPI.rejectWithValue(e.message);
-//     }
-//   }
-// );
-
-// export const addContact = createAsyncThunk(
-//   'contacts/addContacts',
-//   async (contact, thunkAPI) => {
-//     try {
-//       const response = await axios.post('/contacts', { contact });
-//       return response.data;
-//     } catch (e) {
-//       return thunkAPI.rejectWithValue(e.message);
-//     }
-//   }
-// );
-
-// export const deleteTask = createAsyncThunk(
-//   'contacts/deleteContact',
-//   async (taskId, thunkAPI) => {
-//     try {
-//       const response = await axios.delete(`/contacts/${taskId}`);
-//       return response.data;
-//     } catch (e) {
-//       return thunkAPI.rejectWithValue(e.message);
-//     }
-//   }
-// );

@@ -1,25 +1,24 @@
 import { useState } from 'react';
-import { nanoid } from 'nanoid';
-import { add } from 'components/Redux/contactsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { BtnAddContact } from './ContactForm.styled';
 import { FilterStyle } from 'components/Filter/Filter.styled';
-import { selectContacts } from 'components/Redux/selectors';
+import { selectContacts } from 'Redux/selectors';
+import { addContacts, fetchContacts } from 'Redux/operations';
 
 export const ContactForm = () => {
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phone, setPhone] = useState('');
 
   const dispatch = useDispatch();
+
   const contacts = useSelector(selectContacts);
 
   const onAddContact = data => {
-    data.id = nanoid();
     const checkContact = contacts.find(contact => contact.name === data.name);
 
     checkContact
       ? alert(`${data.name} is already in the contacts`)
-      : dispatch(add(data));
+      : dispatch(addContacts(data));
   };
 
   const onFormInput = evt => {
@@ -30,8 +29,8 @@ export const ContactForm = () => {
         setName(evt.target.value);
         break;
 
-      case 'number':
-        setNumber(evt.target.value);
+      case 'phone':
+        setPhone(evt.target.value);
         break;
 
       default:
@@ -41,12 +40,13 @@ export const ContactForm = () => {
 
   const reset = () => {
     setName('');
-    setNumber('');
+    setPhone('');
   };
 
   const onNewSubmit = evt => {
     evt.preventDefault();
-    onAddContact({ name, number });
+    onAddContact({ name, phone });
+    dispatch(fetchContacts());
     reset();
   };
 
@@ -71,8 +71,8 @@ export const ContactForm = () => {
           <FilterStyle
             id="contact_id"
             type="tel"
-            name="number"
-            value={number}
+            name="phone"
+            value={phone}
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             required

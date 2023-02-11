@@ -1,11 +1,14 @@
+// import React from 'react';
 import { useSelector } from 'react-redux';
 import { ContactForm } from './ContactForm/ContactForm';
 import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
-import { selectContacts } from './Redux/selectors';
+import { selectContacts } from '../Redux/selectors';
+import { fetchContacts } from 'Redux/operations';
 
 export const App = () => {
-  const contacts = useSelector(selectContacts);
+  // const contacts = useSelector(selectContacts);
+  // console.log(contacts);
 
   return (
     <div
@@ -23,14 +26,18 @@ export const App = () => {
       <ContactForm />
 
       <h2>Contacts</h2>
-      {contacts.length >= 1 ? (
+      {/* {contacts.length >= 1 ? (
         <div>
           {<Filter />}
           {<ContactList />}
         </div>
       ) : (
         <h3>No contacts yet</h3>
-      )}
+      )} */}
+      <div>
+        {<Filter />}
+        {<ContactList />}
+      </div>
     </div>
   );
 };
