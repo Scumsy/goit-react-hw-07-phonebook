@@ -4,9 +4,6 @@ import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
 
 export const App = () => {
-  // const contacts = useSelector(selectContacts);
-  // console.log(contacts);
-
   return (
     <div
       style={{

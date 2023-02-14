@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { setContact, removeContact } from './Contacts/contactsSlice';
 
 axios.defaults.baseURL =
   'https://63c2b6acb0c286fbe5f2224d.mockapi.io/phonebook';
@@ -24,7 +23,7 @@ export const fetchContacts = createAsyncThunk(
 
 export const deleteContacts = createAsyncThunk(
   'contacts/deleteContacts',
-  async function (id, { rejectWithValue, dispatch }) {
+  async function (id, { rejectWithValue }) {
     try {
       const response = await axios.delete(`/contacts/${id}`);
 
@@ -32,7 +31,7 @@ export const deleteContacts = createAsyncThunk(
         throw new Error('Sorry we cant delete your contact');
       }
 
-      return dispatch(removeContact(id));
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -41,7 +40,7 @@ export const deleteContacts = createAsyncThunk(
 
 export const addContacts = createAsyncThunk(
   'contacts/addContacts',
-  async function (data, { rejectWithValue, dispatch }) {
+  async function (data, { rejectWithValue }) {
     try {
       const contact = {
         name: data.name,
@@ -55,8 +54,7 @@ export const addContacts = createAsyncThunk(
       if (response.status !== 201) {
         throw new Error('Sorry cant add your contact');
       }
-
-      return dispatch(setContact(data));
+      return data;
     } catch (error) {
       return rejectWithValue(error.message);
     }

@@ -18,10 +18,6 @@ import Loader from 'components/Loader/Loader';
 export const ContactList = () => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
-
   const contacts = useSelector(selectContacts);
   const filter = useSelector(selectFilter);
 
@@ -32,6 +28,10 @@ export const ContactList = () => {
   const filteredContacts = contacts.filter(contact =>
     contact.name.toString().toLowerCase().includes(filterToLowerCase)
   );
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return (
     <>

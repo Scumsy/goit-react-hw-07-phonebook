@@ -1,6 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { initialState, setError } from 'Redux/initialState';
+import { initialState } from 'Redux/initialState';
 import { fetchContacts, addContacts, deleteContacts } from 'Redux/operations';
+
+const handleError = (state, action) => {
+  state.isLoading = false;
+  state.error = action.payload;
+};
 
 export const contactsSlice = createSlice({
   name: 'contacts',
@@ -8,20 +13,6 @@ export const contactsSlice = createSlice({
   reducers: {
     setFilter: (state, action) => {
       state.contacts.filter.value = action.payload;
-    },
-    setContact: (state, action) => {
-      state.contacts.items.push(action.payload);
-    },
-    removeContact: (state, action) => {
-      let indexId = state.contacts.items.findIndex(
-        el => el.id === action.payload
-      );
-
-      if (indexId === -1) {
-        return alert(`Item with ${action.id} not found`);
-      }
-
-      state.contacts.items.splice(indexId, 1);
     },
   },
   extraReducers: builder => {
@@ -35,29 +26,28 @@ export const contactsSlice = createSlice({
       state.contacts.items = action.payload;
     });
 
-    builder.addCase(fetchContacts.rejected, () => setError);
+    builder.addCase(fetchContacts.rejected, handleError);
 
-    builder.addCase(deleteContacts.pending, (state, _) => {
-      state.isDeleting = true;
+    builder.addCase(deleteContacts.pending, (state, _) => {});
+
+    builder.addCase(deleteContacts.fulfilled, (state, action) => {
+      state.contacts.items = state.contacts.items.filter(
+        item => item.id !== action.payload.id
+      );
     });
 
-    builder.addCase(deleteContacts.fulfilled, (state, _) => {
-      state.isDeleting = false;
-    });
-
-    builder.addCase(deleteContacts.rejected, () => setError);
+    builder.addCase(deleteContacts.rejected, handleError);
 
     builder.addCase(addContacts.pending, (state, _) => {
       state.isLoading = true;
-      state.isAdd = true;
     });
 
-    builder.addCase(addContacts.fulfilled, (state, _) => {
+    builder.addCase(addContacts.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.isAdd = false;
+      state.contacts.items.push(action.payload);
     });
 
-    builder.addCase(addContacts.rejected, () => setError);
+    builder.addCase(addContacts.rejected, handleError);
   },
 });
 
