@@ -9,9 +9,9 @@ import {
   selectError,
   selectFilter,
   selectLoadingStatus,
-} from 'Redux/selectors';
+} from 'Redux/Contacts/selectors';
 import { useEffect } from 'react';
-import { deleteContacts, fetchContacts } from '../../Redux/operations';
+import { deleteContacts, fetchContacts } from '../../Redux/Contacts/operations';
 import { nanoid } from 'nanoid';
 import Loader from 'components/Loader/Loader';
 

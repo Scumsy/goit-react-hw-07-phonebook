@@ -1,10 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { initialState } from 'Redux/initialState';
-import { fetchContacts, addContacts, deleteContacts } from 'Redux/operations';
+import { initialState } from './initialState';
+import {
+  fetchContacts,
+  addContacts,
+  deleteContacts,
+} from 'Redux/Contacts/operations';
 
 const handleError = (state, action) => {
   state.isLoading = false;
   state.error = action.payload;
+};
+
+const handlePending = state => {
+  state.isLoading = true;
+  state.error = '';
 };
 
 export const contactsSlice = createSlice({
@@ -16,10 +25,7 @@ export const contactsSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(fetchContacts.pending, (state, _) => {
-      state.isLoading = true;
-      state.error = '';
-    });
+    builder.addCase(fetchContacts.pending, handlePending);
 
     builder.addCase(fetchContacts.fulfilled, (state, action) => {
       state.isLoading = false;
@@ -28,7 +34,7 @@ export const contactsSlice = createSlice({
 
     builder.addCase(fetchContacts.rejected, handleError);
 
-    builder.addCase(deleteContacts.pending, (state, _) => {});
+    builder.addCase(deleteContacts.pending, handleError);
 
     builder.addCase(deleteContacts.fulfilled, (state, action) => {
       state.contacts.items = state.contacts.items.filter(
@@ -38,9 +44,7 @@ export const contactsSlice = createSlice({
 
     builder.addCase(deleteContacts.rejected, handleError);
 
-    builder.addCase(addContacts.pending, (state, _) => {
-      state.isLoading = true;
-    });
+    builder.addCase(addContacts.pending, handlePending);
 
     builder.addCase(addContacts.fulfilled, (state, action) => {
       state.isLoading = false;
